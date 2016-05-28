@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
-#include <cstdlib>
 #include <assert.h>
+#include <cstdlib>
 #include <vector>
 
 
@@ -21,14 +21,14 @@ Renderer::~Renderer()
 void Renderer::_InitInstance()
 {
 	VkApplicationInfo app_info {};
-	app_info.sType				= VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	app_info.apiVersion			= VK_MAKE_VERSION( 1, 0, 3 );
+	app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+	app_info.apiVersion = VK_MAKE_VERSION( 1, 0, 3 );
 	app_info.applicationVersion = VK_MAKE_VERSION( 0, 1, 0 );
-	app_info.pApplicationName	= "Vulkan Playpen";
+	app_info.pApplicationName = "Vulkan Playpen";
 
 	VkInstanceCreateInfo instance_info {};
-	instance_info.sType				= VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-	instance_info.pApplicationInfo	= &app_info;
+	instance_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+	instance_info.pApplicationInfo = &app_info;
 
 	auto err = vkCreateInstance( &instance_info, nullptr, &_instance );
 
@@ -46,21 +46,21 @@ void Renderer::_DeInitInstance()
 
 void Renderer::_InitDevice()
 {
-	_InitGpu();
+	_InitPhysicalDevice();
 	_InitGraphicsFamilyIndex();
 
 	float queue_priorities[] { 1.0f };
 
 	VkDeviceQueueCreateInfo device_queue_create_info {};
-	device_queue_create_info.sType				= VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-	device_queue_create_info.queueFamilyIndex	= _graphics_family_index;
-	device_queue_create_info.queueCount			= 1;
-	device_queue_create_info.pQueuePriorities	= queue_priorities;
+	device_queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+	device_queue_create_info.queueFamilyIndex = _graphics_family_index;
+	device_queue_create_info.queueCount = 1;
+	device_queue_create_info.pQueuePriorities = queue_priorities;
 
 	VkDeviceCreateInfo device_info {};
-	device_info.sType					= VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-	device_info.queueCreateInfoCount	= 1;
-	device_info.pQueueCreateInfos		= &device_queue_create_info;
+	device_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+	device_info.queueCreateInfoCount = 1;
+	device_info.pQueueCreateInfos = &device_queue_create_info;
 
 	auto err = vkCreateDevice( _gpu, &device_info, nullptr, &_device );
 
@@ -76,7 +76,7 @@ void Renderer::_DeInitDevice()
 	_device = nullptr;
 }
 
-void Renderer::_InitGpu()
+void Renderer::_InitPhysicalDevice()
 {
 	uint32_t gpu_count = 0;
 	vkEnumeratePhysicalDevices( _instance, &gpu_count, nullptr );

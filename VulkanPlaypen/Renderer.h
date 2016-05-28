@@ -15,7 +15,7 @@ private:
 	void _InitDevice();
 	void _DeInitDevice();
 
-	void _InitGpu();
+	void _InitPhysicalDevice();
 
 	void _InitGpuProperties();
 
