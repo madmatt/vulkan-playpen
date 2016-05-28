@@ -46,7 +46,7 @@ void Renderer::_InitInstance()
 	auto err = vkCreateInstance( &instance_info, nullptr, &_instance );
 
 	if( err != VK_SUCCESS ) {
-		assert( 1 && "vkCreateInstance failed" );
+		assert( 0 && "vkCreateInstance failed" );
 		std::exit( -1 );
 	}
 }
@@ -84,7 +84,7 @@ void Renderer::_InitDevice()
 	auto err = vkCreateDevice( _gpu, &device_info, nullptr, &_device );
 
 	if( err != VK_SUCCESS ) {
-		assert( 1 && "vkCreateDevice failed" );
+		assert( 0 && "vkCreateDevice failed" );
 		std::exit( -1 );
 	}
 
@@ -131,7 +131,7 @@ void Renderer::_InitGraphicsFamilyIndex()
 	}
 
 	if( !found ) {
-		assert( 1 && "vkGetPhysicalDeviceQueueFamilyProperties found no queue family with VK_QUEUE_GRAPHICS_BIT set" );
+		assert( 0 && "vkGetPhysicalDeviceQueueFamilyProperties found no queue family with VK_QUEUE_GRAPHICS_BIT set" );
 		std::exit( -1 );
 	}
 }
@@ -194,7 +194,7 @@ void Renderer::_InitDebug()
 	fvkDestroyDebugReportCallbackEXT = (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr( _instance, "vkDestroyDebugReportCallbackEXT" );
 
 	if( fvkCreateDebugReportCallbackEXT == nullptr || fvkDestroyDebugReportCallbackEXT == nullptr ) {
-		assert( 1 && "fvkCreateDebugReportCallbackEXT or fvkDestroyDebugReportCallbackEXT not set correctly" );
+		assert( 0 && "fvkCreateDebugReportCallbackEXT or fvkDestroyDebugReportCallbackEXT not set correctly" );
 		std::exit( -1 );
 	}
 
