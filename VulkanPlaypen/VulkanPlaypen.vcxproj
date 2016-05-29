@@ -135,9 +135,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RendererUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RendererUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

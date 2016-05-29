@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "RendererUtils.h"
 
 #include <assert.h>
 #include <cstdlib>
@@ -16,6 +17,7 @@ Renderer::Renderer()
 	_InitInstance();
 	_InitDebug();
 	_InitDevice();
+	_InitQueue();
 }
 
 
@@ -43,18 +45,13 @@ void Renderer::_InitInstance()
 	instance_info.ppEnabledExtensionNames = _instance_extensions.data();
 	instance_info.pNext = &debug_callback_create_info;
 
-	auto err = vkCreateInstance( &instance_info, nullptr, &_instance );
-
-	if( err != VK_SUCCESS ) {
-		assert( 0 && "vkCreateInstance failed" );
-		std::exit( -1 );
-	}
+	vkResultErrorCheck( vkCreateInstance( &instance_info, nullptr, &_instance ) );
 }
 
 void Renderer::_DeInitInstance()
 {
 	vkDestroyInstance( _instance, nullptr );
-	_instance = nullptr;
+	_instance = VK_NULL_HANDLE;
 }
 
 void Renderer::_InitDevice()
@@ -81,20 +78,18 @@ void Renderer::_InitDevice()
 	device_info.enabledExtensionCount = _device_extensions.size();
 	device_info.ppEnabledExtensionNames = _device_extensions.data();
 
-	auto err = vkCreateDevice( _gpu, &device_info, nullptr, &_device );
+	vkResultErrorCheck( vkCreateDevice( _gpu, &device_info, nullptr, &_device ) );
+}
 
-	if( err != VK_SUCCESS ) {
-		assert( 0 && "vkCreateDevice failed" );
-		std::exit( -1 );
-	}
-
-
+void Renderer::_InitQueue()
+{
+	vkGetDeviceQueue( _device, _graphics_family_index, 0, &_queue );
 }
 
 void Renderer::_DeInitDevice()
 {
 	vkDestroyDevice( _device, nullptr );
-	_device = nullptr;
+	_device = VK_NULL_HANDLE;
 }
 
 void Renderer::_InitPhysicalDevice()
@@ -152,14 +147,15 @@ VulkanDebugCallback( VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT obj
 	}
 	else if( flags & VK_DEBUG_REPORT_ERROR_BIT_EXT ) {
 		type = "ERR";
-	} else if (flags & VK_DEBUG_REPORT_DEBUG_BIT_EXT ) {
+	}
+	else if( flags & VK_DEBUG_REPORT_DEBUG_BIT_EXT ) {
 		type = "DEBUG";
 	}
 	else {
 		type = "????";
 	}
 
-	std::cout << "[" << std::left << std::setw(6) << type << " @ " << layer_prefix << "] " << msg << std::endl;
+	std::cout << "[" << std::left << std::setw( 6 ) << type << " @ " << layer_prefix << "] " << msg << std::endl;
 
 #ifdef _WIN32
 	if( flags & VK_DEBUG_REPORT_ERROR_BIT_EXT ) {
@@ -179,13 +175,11 @@ void Renderer::_SetupDebug()
 	debug_callback_create_info.pfnCallback = VulkanDebugCallback;
 	debug_callback_create_info.flags = VK_DEBUG_REPORT_INFORMATION_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT | VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_DEBUG_BIT_EXT | VK_DEBUG_REPORT_FLAG_BITS_MAX_ENUM_EXT | 0;
 
-	_instance_layers.push_back( "VK_LAYER_LUNARG_image" );
-	_instance_layers.push_back( "VK_LAYER_LUNARG_object_tracker" );
+	_instance_layers.push_back( "VK_LAYER_LUNARG_standard_validation" );
 
 	_instance_extensions.push_back( VK_EXT_DEBUG_REPORT_EXTENSION_NAME );
 
-	_device_layers.push_back( "VK_LAYER_LUNARG_image" );
-	_device_layers.push_back( "VK_LAYER_LUNARG_object_tracker" );
+	_device_layers.push_back( "VK_LAYER_LUNARG_standard_validation" );
 }
 
 void Renderer::_InitDebug()
@@ -198,16 +192,13 @@ void Renderer::_InitDebug()
 		std::exit( -1 );
 	}
 
-	
-	
-
 	fvkCreateDebugReportCallbackEXT( _instance, &debug_callback_create_info, nullptr, &_debug_report );
 }
 
 void Renderer::_DeInitDebug()
 {
 	fvkDestroyDebugReportCallbackEXT( _instance, _debug_report, nullptr );
-	_debug_report = 0;
+	_debug_report = VK_NULL_HANDLE;
 }
 
 void Renderer::_ListValidationLayers()
@@ -243,4 +234,19 @@ void Renderer::_ListValidationLayers()
 
 		std::cout << std::endl << std::endl;
 	}
+}
+
+VkDevice Renderer::getDevice()
+{
+	return _device;
+}
+
+VkQueue Renderer::getQueue()
+{
+	return _queue;
+}
+
+uint32_t Renderer::getGraphicsFamilyIndex()
+{
+	return _graphics_family_index;
 }

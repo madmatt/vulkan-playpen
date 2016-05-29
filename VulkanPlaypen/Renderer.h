@@ -10,12 +10,18 @@ public:
 	Renderer();
 	~Renderer();
 
+	VkDevice getDevice();
+	VkQueue getQueue();
+	uint32_t getGraphicsFamilyIndex();
+
 private:
 	void _InitInstance();
 	void _DeInitInstance();
 
 	void _InitDevice();
 	void _DeInitDevice();
+
+	void _InitQueue();
 
 	void _InitPhysicalDevice();
 
@@ -29,24 +35,27 @@ private:
 
 	void _ListValidationLayers();
 
-	VkInstance					_instance				= nullptr;
+	VkInstance _instance = VK_NULL_HANDLE;
 
-	VkPhysicalDevice			_gpu					= nullptr;
-	VkPhysicalDeviceProperties	_gpu_properties			{};
-	VkDevice					_device					= nullptr;
+	VkPhysicalDevice _gpu = VK_NULL_HANDLE;
+	VkPhysicalDeviceProperties _gpu_properties {};
 
-	uint32_t					_graphics_family_index	= 0;
+	VkDevice _device = VK_NULL_HANDLE;
 
-	std::vector<const char*>	_instance_layers;
-	std::vector<const char*>	_instance_extensions;
+	VkQueue _queue = VK_NULL_HANDLE;
 
-	std::vector<const char*>	_device_layers;
-	std::vector<const char*>	_device_extensions;
+	uint32_t _graphics_family_index = 0;
+
+	std::vector<const char*> _instance_layers;
+	std::vector<const char*> _instance_extensions;
+
+	std::vector<const char*> _device_layers;
+	std::vector<const char*> _device_extensions;
 
 	PFN_vkCreateDebugReportCallbackEXT fvkCreateDebugReportCallbackEXT = nullptr;
 	PFN_vkDestroyDebugReportCallbackEXT fvkDestroyDebugReportCallbackEXT = nullptr;
 
-	VkDebugReportCallbackEXT _debug_report = 0;
+	VkDebugReportCallbackEXT _debug_report = VK_NULL_HANDLE;
 
 	VkDebugReportCallbackCreateInfoEXT debug_callback_create_info = {};
 };
