@@ -1,4 +1,6 @@
+#include "Platform.h"
 #include "Renderer.h"
+
 
 void TestCommandPoolWithFence( Renderer &r )
 {
@@ -194,6 +196,12 @@ int main()
 	TestCommandPoolWithFence( r );
 
 	TestCommandPoolWithSemaphore( r );
+
+	r.OpenWindow( 800, 600, "Vulkan Playpen" );
+
+	while( r.Run() ) {
+
+	}
 
 	return 0;
 }

@@ -1,4 +1,7 @@
 #include "RendererUtils.h"
+#include "BUILD_OPTIONS.h"
+
+#if BUILD_ENABLE_VUKLAN_RUNTIME_DEBUG
 
 void vkResultErrorCheck( VkResult result )
 {
@@ -67,3 +70,9 @@ void vkResultErrorCheck( VkResult result )
 		std::exit( -1 );
 	}
 }
+
+#else
+
+void vkResultErrorCheck( VkResult result ) {}
+
+#endif

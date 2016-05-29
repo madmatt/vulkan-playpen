@@ -1,6 +1,7 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include "Platform.h"
+
 #include <assert.h>
 #include <iostream>
 

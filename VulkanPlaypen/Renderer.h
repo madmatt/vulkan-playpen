@@ -1,6 +1,8 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include "Platform.h"
+#include "Window.h"
+
 #include <cstdlib>
 #include <vector>
 
@@ -10,9 +12,16 @@ public:
 	Renderer();
 	~Renderer();
 
-	VkDevice getDevice();
-	VkQueue getQueue();
-	uint32_t getGraphicsFamilyIndex();
+	Window* OpenWindow( uint32_t size_x, uint32_t size_y, std::string windowName );
+
+	bool Run();
+
+	const VkInstance getInstance() const;
+	const VkPhysicalDevice getPhysicalDevice() const;
+	const VkDevice getDevice() const;
+	const VkQueue getQueue() const;
+	const uint32_t getGraphicsFamilyIndex() const;
+	const VkPhysicalDeviceProperties& getPhysicalDeviceProperties() const;
 
 private:
 	void _InitInstance();
@@ -45,6 +54,8 @@ private:
 	VkQueue _queue = VK_NULL_HANDLE;
 
 	uint32_t _graphics_family_index = 0;
+
+	Window* _window = nullptr;
 
 	std::vector<const char*> _instance_layers;
 	std::vector<const char*> _instance_extensions;

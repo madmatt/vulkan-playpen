@@ -1,15 +1,16 @@
+#include "BUILD_OPTIONS.h"
+#include "Platform.h"
+#include "Window.h"
+
 #include "Renderer.h"
 #include "RendererUtils.h"
+
 
 #include <assert.h>
 #include <cstdlib>
 #include <iostream>
 #include <iomanip>
 #include <vector>
-
-#ifdef _WIN32
-#include <Windows.h>
-#endif
 
 Renderer::Renderer()
 {
@@ -23,9 +24,26 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
+	delete _window;
+
 	_DeInitDevice();
 	_DeInitDebug();
 	_DeInitInstance();
+}
+
+Window * Renderer::OpenWindow( uint32_t size_x, uint32_t size_y, std::string windowName )
+{
+	_window = new Window(size_x, size_y, windowName);
+	return _window;
+}
+
+bool Renderer::Run()
+{
+	if( _window != nullptr ) {
+		return _window->Update();
+	}
+
+	return true;
 }
 
 void Renderer::_InitInstance()
@@ -131,6 +149,8 @@ void Renderer::_InitGraphicsFamilyIndex()
 	}
 }
 
+#if BUILD_ENABLE_VULKAN_DEBUG
+
 VKAPI_ATTR VkBool32 VKAPI_CALL
 VulkanDebugCallback( VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT object_type, uint64_t src_obj, size_t location, int32_t msg_code, const char* layer_prefix, const char* msg, void* user_data )
 {
@@ -201,6 +221,15 @@ void Renderer::_DeInitDebug()
 	_debug_report = VK_NULL_HANDLE;
 }
 
+#else
+
+void Renderer::_SetupDebug() {}
+void Renderer::_InitDebug() {}
+void Renderer::_DeInitDebug() {}
+
+
+#endif
+
 void Renderer::_ListValidationLayers()
 {
 	// Instance Layer debug list
@@ -236,17 +265,32 @@ void Renderer::_ListValidationLayers()
 	}
 }
 
-VkDevice Renderer::getDevice()
+const VkInstance Renderer::getInstance() const
+{
+	return _instance;
+}
+
+const VkPhysicalDevice Renderer::getPhysicalDevice() const
+{
+	return _gpu;
+}
+
+const VkDevice Renderer::getDevice() const
 {
 	return _device;
 }
 
-VkQueue Renderer::getQueue()
+const VkQueue Renderer::getQueue() const
 {
 	return _queue;
 }
 
-uint32_t Renderer::getGraphicsFamilyIndex()
+const uint32_t Renderer::getGraphicsFamilyIndex() const
 {
 	return _graphics_family_index;
+}
+
+const VkPhysicalDeviceProperties& Renderer::getPhysicalDeviceProperties() const
+{
+	return _gpu_properties;
 }
