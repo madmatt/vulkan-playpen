@@ -23,12 +23,16 @@ private:
 	uint32_t _surface_size_y = 512;
 	std::string _window_name;
 
+	uint32_t _swapchain_image_count = 2;
+
 	VkSurfaceFormatKHR _surface_format = {};
 	VkSurfaceCapabilitiesKHR _surface_capabilities = {};
 
 	Renderer* _renderer = nullptr;
 
 	VkSurfaceKHR _surface = VK_NULL_HANDLE;
+
+	VkSwapchainKHR _swapchain = VK_NULL_HANDLE;
 
 #if VK_USE_PLATFORM_WIN32_KHR
 	HINSTANCE _win32_instance = NULL;
@@ -44,6 +48,9 @@ private:
 
 	void _InitSurface();
 	void _DeInitSurface();
+
+	void _InitSwapchain();
+	void _DeInitSwapchain();
 
 };
 
