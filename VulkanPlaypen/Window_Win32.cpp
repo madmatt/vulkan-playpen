@@ -1,6 +1,7 @@
 #include "BUILD_OPTIONS.h"
 #include "Platform.h"
 #include "Window.h"
+#include "Renderer.h"
 
 #include <assert.h>
 
@@ -93,6 +94,16 @@ void Window::_UpdateOSWindow()
 		TranslateMessage( &msg );
 		DispatchMessage( &msg );
 	}
+}
+
+void Window::_InitOSSurface()
+{
+	VkWin32SurfaceCreateInfoKHR surface_info {};
+	surface_info.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+	surface_info.hinstance = _win32_instance;
+	surface_info.hwnd = _win32_window;
+
+	vkCreateWin32SurfaceKHR( _renderer->getInstance(), &surface_info, nullptr, &_surface );
 }
 
 #endif

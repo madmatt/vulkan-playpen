@@ -24,6 +24,8 @@ public:
 	const VkPhysicalDeviceProperties& getPhysicalDeviceProperties() const;
 
 private:
+	void _SetupLayersAndExtensions();
+	
 	void _InitInstance();
 	void _DeInitInstance();
 

@@ -14,6 +14,7 @@
 
 Renderer::Renderer()
 {
+	_SetupLayersAndExtensions();
 	_SetupDebug();
 	_InitInstance();
 	_InitDebug();
@@ -31,9 +32,9 @@ Renderer::~Renderer()
 	_DeInitInstance();
 }
 
-Window * Renderer::OpenWindow( uint32_t size_x, uint32_t size_y, std::string windowName )
+Window* Renderer::OpenWindow( uint32_t size_x, uint32_t size_y, std::string windowName )
 {
-	_window = new Window(size_x, size_y, windowName);
+	_window = new Window(this, size_x, size_y, windowName);
 	return _window;
 }
 
@@ -44,6 +45,12 @@ bool Renderer::Run()
 	}
 
 	return true;
+}
+
+void Renderer::_SetupLayersAndExtensions()
+{
+	_instance_extensions.push_back( VK_KHR_SURFACE_EXTENSION_NAME );
+	_instance_extensions.push_back( PLATFORM_SURFACE_EXTENSION_NAME );
 }
 
 void Renderer::_InitInstance()
